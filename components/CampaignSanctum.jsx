@@ -662,7 +662,7 @@ export default function App() {
 
   // Active world context
   const [activeWorld, setActiveWorld] = useState(null); // { name, summary }
-  const [showWorldBanner, setShowWorldBanner] = useState(false);
+  const [, setShowWorldBanner] = useState(false);
 
   const outputRef = useRef(null);
   const T = THEMES[themeKey];
