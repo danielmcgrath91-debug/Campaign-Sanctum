@@ -681,15 +681,14 @@ export default function App() {
   }, [themeKey]);
 
   const callAI = async (prompt) => {
-    const fn = window["claude"] && window["claude"]["complete"];
-    if (typeof fn !== "function") throw new Error("Please enable 'Create AI-powered artifacts' in Settings > Profile > Feature Preview, then reload.");
-    const response = await fn(prompt);
-    let result = "";
-    if (typeof response === "string") result = response.trim();
-    else if (response?.content) result = Array.isArray(response.content) ? response.content.map(b => typeof b === "string" ? b : b?.text ?? "").join("").trim() : String(response.content).trim();
-    else if (response?.completion) result = String(response.completion).trim();
-    if (!result) result = "Empty response. Raw: " + JSON.stringify(response).slice(0, 200);
-    return result;
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+    if (!response.ok) throw new Error("API call failed");
+    const data = await response.json();
+    return data.result;
   };
 
   const worldContext = activeWorld
